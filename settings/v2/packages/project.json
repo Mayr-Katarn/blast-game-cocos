@@ -1,0 +1,42 @@
+{
+  "__version__": "1.0.2",
+  "general": {
+    "designResolution": {
+      "height": 720,
+      "width": 480,
+      "fitHeight": false,
+      "fitWidth": true
+    }
+  },
+  "physics": {
+    "gravity": {
+      "y": 0
+    },
+    "collisionGroups": [
+      {
+        "index": 1,
+        "name": "Block"
+      },
+      {
+        "index": 2,
+        "name": "Cell"
+      }
+    ],
+    "collisionMatrix": {
+      "0": 0,
+      "1": 6,
+      "2": 2
+    },
+    "allowSleep": false
+  },
+  "layer": [
+    {
+      "name": "Block",
+      "value": 1
+    },
+    {
+      "name": "Cell",
+      "value": 2
+    }
+  ]
+}
