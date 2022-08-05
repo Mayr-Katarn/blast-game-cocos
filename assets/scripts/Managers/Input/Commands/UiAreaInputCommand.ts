@@ -1,21 +1,21 @@
-import { log, _decorator, Component, EventTarget, Enum, Node, Touch } from 'cc';
+import { _decorator, Node, Touch } from 'cc';
+import BusterButton from '../../../Ui/Buttons/BusterButton';
 import InputCatcher from '../InputCatcher';
 import InputManager from '../InputManager';
 import IInputCommand from './IInputCommand';
 
-//#region classes-helpers
-// const { ccclass, property, menu } = _decorator;
-//#endregion
-
-export default class UiAreaCommand extends IInputCommand {
-
-    constructor(manager: InputManager) {
+export default class UiAreaInputCommand extends IInputCommand {
+	constructor(manager: InputManager) {
 		super(manager);
 	}
 
 	public onDown(touch: Touch, place: InputCatcher, target: Node): void {
-        console.log('UiAreaCommand ~ onDown ~ touch, place, target', touch, place, target)
 	}
 
-	public onUp(touch: Touch, place: InputCatcher, target: Node): void {}
+	public onMove(touch: Touch, place: InputCatcher, target: Node): void {}
+
+	public onUp(touch: Touch, place: InputCatcher, target: Node): void {
+		const busterButton = place.node.getComponent(BusterButton);
+		busterButton?.onClick();
+	}
 }

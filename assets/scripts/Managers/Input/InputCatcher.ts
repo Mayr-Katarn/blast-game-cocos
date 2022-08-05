@@ -1,5 +1,5 @@
 import { log, _decorator, Component, EventTarget, Enum, Node, EventTouch } from 'cc';
-import { eventTarget, GameEvent } from '../../Enums/GameEvents';
+import { gameEventTarget, GameEvent } from '../../EventEnums/GameEvents';
 import { InputDirection } from './Enums/InputDirection';
 import { InputType } from './Enums/InputType';
 
@@ -48,15 +48,15 @@ export default class InputCatcher extends Component {
 
 	//#region event handlers
 	public onDown(event: EventTouch): void {
-		eventTarget.emit(GameEvent.INPUT, InputType.Down, this.direction, event.touch, this, this.target);
+		gameEventTarget.emit(GameEvent.INPUT, InputType.Down, this.direction, event.touch, this, this.target);
 	}
 
 	public onMove(event: EventTouch): void {
-		eventTarget.emit(GameEvent.INPUT, InputType.Move, this.direction, event.touch, this, this.target);
+		gameEventTarget.emit(GameEvent.INPUT, InputType.Move, this.direction, event.touch, this, this.target);
 	}
 
 	public onUp(event: EventTouch): void {
-		eventTarget.emit(GameEvent.INPUT, InputType.Up, this.direction, event.touch, this, this.target);
+		gameEventTarget.emit(GameEvent.INPUT, InputType.Up, this.direction, event.touch, this, this.target);
 	}
 	//#endregion
 }

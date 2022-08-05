@@ -1,7 +1,8 @@
-import { log, _decorator, Component, Enum, Node, Vec2, Prefab, CCInteger, instantiate, Vec3 } from 'cc';
-import { eventTarget, GameEvent } from '../../Enums/GameEvents';
-import Block from '../../GameObjects/Block';
-import GameField from '../../GameObjects/GameField';
+import { log, _decorator, Component, Enum, Node, Vec2, Prefab, CCInteger, instantiate, Vec3, View } from 'cc';
+import { gameEventTarget, GameEvent } from '../../EventEnums/GameEvents';
+import { UiEvent, uiEventTarget } from '../../EventEnums/UiEvents';
+import Block from '../../GameObjects/GameField/Block';
+import GameField from '../../GameObjects/GameField/GameField';
 
 //#region classes-helpers
 const { ccclass, property, menu } = _decorator;
@@ -9,6 +10,12 @@ const { ccclass, property, menu } = _decorator;
 interface IBlockChain {
     [key: number]: Block[]
 }
+
+const GameOverState = Enum({
+    None: 0,
+    Win: 1,
+    Lose: 2
+})
 //#endregion
 
 @ccclass('GameManager')
@@ -41,13 +48,14 @@ export default class GameManager extends Component {
     protected playerTargetScore: number = 10000;
     //#endregion
 
+    //#region public fields and properties
+    //#endregion
+
     //#region private fields and properties
     private _playerScore: number = 0;
     private _blockChains: IBlockChain = {};
     private _resetFieldTimes: number = 0;
-    //#endregion
-        
-    //#region public fields and properties
+    private _gameOverState: number = GameOverState.None;
     //#endregion
 
 	//#region life-cycle callbacks
@@ -60,10 +68,8 @@ export default class GameManager extends Component {
     }
 
     public start(): void {
-        const gameField: Node = instantiate(this.gameFieldPrefab);
-        gameField.parent = this.rootNode;
-        gameField.setPosition(Vec3.ZERO);
-        gameField.getComponent(GameField).init(this.fieldSizeInCells, this.maxActiveColors);
+        this._createGameField();
+        uiEventTarget.emit(UiEvent.SET_TURNS, this.playerTurns);
     }
 
     public update(): void {
@@ -77,8 +83,17 @@ export default class GameManager extends Component {
 	//#region private methods
     private _eventListener(isOn: boolean): void {
         const func: string = isOn ? "on" : "off";
-        eventTarget[func](GameEvent.RESET_FIELD, this.onResetField, this)
-        eventTarget[func](GameEvent.SET_BLOCK_IN_CHAIN, this.onSetBlockInChain, this)
+        gameEventTarget[func](GameEvent.RESET_FIELD, this.onResetField, this);
+        gameEventTarget[func](GameEvent.SET_BLOCK_IN_CHAIN, this.onSetBlockInChain, this);
+        gameEventTarget[func](GameEvent.ADD_SCORE, this.onAddScore, this);
+        gameEventTarget[func](GameEvent.MADE_TURN, this.onMadeTurn, this);
+    }
+
+    private _createGameField(): void {
+        const gameField: Node = instantiate(this.gameFieldPrefab);
+        gameField.setParent(this.rootNode);
+        gameField.setPosition(Vec3.ZERO);
+        gameField.getComponent(GameField).init(this.fieldSizeInCells, this.maxActiveColors);
     }
 
     private _checkChains(): void {
@@ -87,6 +102,7 @@ export default class GameManager extends Component {
             if (this._blockChains[chain].length !== 0 && this._blockChains[chain].every((block: Block) => !block.node.active)){
                 this._calcPlayerPoints(this._blockChains[chain].length)
                 this._blockChains[chain] = [];
+                this._madeTurn();
                 // console.log(this._blockChains);
             }
         })
@@ -97,17 +113,27 @@ export default class GameManager extends Component {
         this._playerScore += score;
         const percentageCompleted: number = this._playerScore / this.playerTargetScore * 100;
         console.log(score, percentageCompleted);
-        eventTarget.emit(GameEvent.SET_PROGRESS, percentageCompleted);
+        uiEventTarget.emit(UiEvent.SET_PROGRESS, percentageCompleted);
+        uiEventTarget.emit(UiEvent.SET_PLAYER_SCORE, this._playerScore);
+        uiEventTarget.emit(UiEvent.SET_TURNS, this.playerTurns);
 
-        if (this._playerScore >= this.playerTargetScore){
+        if (this._playerScore >= this.playerTargetScore) {
             this._win();
+        }
+    }
+
+    private _madeTurn(): void {
+        this.playerTurns--;
+        uiEventTarget.emit(UiEvent.SET_TURNS, this.playerTurns);
+        if (this.playerTurns <= 0) {
+            this._lose();
         }
     }
 
     private _resetField(): void {
         this._resetFieldTimes++;
         if (this._resetFieldTimes >= this.maxResetFieldTimes) {
-            this._gameOver();
+            this._lose();
         }
     }
     
@@ -122,11 +148,17 @@ export default class GameManager extends Component {
     }
 
     private _win(): void {
-        log("WIN")
+        if (this._gameOverState === GameOverState.None) {
+            this._gameOverState = GameOverState.Win;
+            log("WIN")
+        }
     }
 
-    private _gameOver(): void {
-        log("GAME OVER")
+    private _lose(): void {
+        if (this._gameOverState === GameOverState.None) {
+            this._gameOverState = GameOverState.Lose;
+            log("GAME OVER")
+        }
     }
 	//#endregion
 
@@ -137,6 +169,14 @@ export default class GameManager extends Component {
 
     public onSetBlockInChain(block: Block, firstBlock: Block): void {
         this._setBlockInChain(block, firstBlock);
+    }
+
+    public onAddScore(blockSum: number): void {
+        this._calcPlayerPoints(blockSum);
+    }
+
+    public onMadeTurn(): void {
+        this._madeTurn();
     }
     //#endregion
 }

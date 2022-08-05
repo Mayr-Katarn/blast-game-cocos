@@ -4,7 +4,7 @@
     "designResolution": {
       "height": 720,
       "width": 480,
-      "fitHeight": false,
+      "fitHeight": true,
       "fitWidth": true
     }
   },
@@ -20,12 +20,17 @@
       {
         "index": 2,
         "name": "Cell"
+      },
+      {
+        "index": 3,
+        "name": "Buster"
       }
     ],
     "collisionMatrix": {
       "0": 0,
-      "1": 6,
-      "2": 2
+      "1": 14,
+      "2": 2,
+      "3": 2
     },
     "allowSleep": false
   },
@@ -37,6 +42,10 @@
     {
       "name": "Cell",
       "value": 2
+    },
+    {
+      "name": "Buster",
+      "value": 4
     }
   ]
 }

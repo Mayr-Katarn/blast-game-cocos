@@ -11,10 +11,10 @@ export default class Name extends Component {
     //#region editors fields and properties
     //#endregion
 
-    //#region private fields and properties
+    //#region public fields and properties
     //#endregion
         
-    //#region public fields and properties
+    //#region private fields and properties
     //#endregion
 
 	//#region life-cycle callbacks
