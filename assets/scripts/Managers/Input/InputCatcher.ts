@@ -1,4 +1,4 @@
-import { log, _decorator, Component, EventTarget, Enum, Node, EventTouch } from 'cc';
+import { log, _decorator, Component, Node, EventTouch } from 'cc';
 import { gameEventTarget, GameEvent } from '../../EventEnums/GameEvents';
 import GameCommandType from './Enums/GameAreaCommandType';
 import InputDirection from './Enums/InputDirection';
@@ -12,10 +12,8 @@ const { ccclass, property, menu } = _decorator;
 @ccclass('InputCatcher')
 @menu('Input/InputCatcher')
 export default class InputCatcher extends Component {
-
     //#region editors fields and properties
 	@property({ type: InputDirection })
-	// public direction: number = InputDirection.None;
 	set direction(value: number) { this._direction = value; }
 	get direction(): number { return this._direction; }
 

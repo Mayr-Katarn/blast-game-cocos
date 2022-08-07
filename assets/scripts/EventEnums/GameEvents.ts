@@ -6,6 +6,7 @@ export enum GameEvent {
 
     // Input
     INPUT,
+    TOGGLE_INPUT_MANAGER,
 
     // Game manager
     RESET_FIELD,
@@ -18,7 +19,9 @@ export enum GameEvent {
     SET_CELL_MATCH,
 
     // Block
-    RESET_BLOCK_COLOR,
-    TOGGLE_ACTIVE_BUSTER,
-    ACTIVATE_BUSTER
+    BLOCK_RESET_COLOR,
+    BLOCK_TOGGLE_ACTIVE_BUSTER,
+
+    // Buster
+    BUSTER_ACTIVATE,
 }

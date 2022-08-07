@@ -1,6 +1,7 @@
 import { _decorator, Node, Touch } from 'cc';
 import BusterButton from '../../../Ui/Buttons/BusterButton';
 import PauseButton from '../../../Ui/Buttons/PauseButton';
+import StartGameButton from '../../../Ui/Buttons/StartGameButton';
 import InputDirection from '../Enums/InputDirection';
 import UiAreaCommandType from '../Enums/UiAreaCommandType';
 import InputCatcher from '../InputCatcher';
@@ -27,6 +28,10 @@ export default class UiAreaInputCommand extends IInputCommand {
 
 				case UiAreaCommandType.PauseButton:
 					place.node.getComponent(PauseButton).onClick();
+					break;
+
+				case UiAreaCommandType.StartGameButton:
+					place.node.getComponent(StartGameButton).onClick();
 					break;
 			}
 		}

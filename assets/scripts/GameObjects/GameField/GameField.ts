@@ -1,4 +1,4 @@
-import { log, _decorator, Component, Enum, Node, Prefab, Vec2, UITransform, math, CCInteger, PhysicsSystem2D, EPhysics2DDrawFlags, Vec3, instantiate, Widget } from 'cc';
+import { log, _decorator, Component, Node, Prefab, Vec2, UITransform, math, Vec3, instantiate, Widget } from 'cc';
 import { GameEvent, gameEventTarget } from '../../EventEnums/GameEvents';
 import Pool from '../../Pool/Pool';
 import Block from './Block';
@@ -159,9 +159,8 @@ export default class GameField extends Component {
     }
 
     private _resetBlockColors(): void {
-        console.log('NO MATCH!!!!!------');
         this.unscheduleAllCallbacks();
-        gameEventTarget.emit(GameEvent.RESET_BLOCK_COLOR);
+        gameEventTarget.emit(GameEvent.BLOCK_RESET_COLOR);
         this._initFieldMatchCheck();
     }
 

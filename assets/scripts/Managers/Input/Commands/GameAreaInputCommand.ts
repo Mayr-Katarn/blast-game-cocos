@@ -1,5 +1,4 @@
 import { _decorator, Node, Touch } from 'cc';
-import { GameEvent, gameEventTarget } from '../../../EventEnums/GameEvents';
 import Block from '../../../GameObjects/GameField/Block';
 import GameAreaCommandType from '../Enums/GameAreaCommandType';
 import InputDirection from '../Enums/InputDirection';
@@ -14,7 +13,7 @@ export default class GameAreaInputCommand extends IInputCommand {
 
 	public onDown(touch: Touch, place: InputCatcher): void {
 		const inputCatcher: InputCatcher = place.node.getComponent(InputCatcher);
-		
+
 		if (inputCatcher?.direction === InputDirection.GameArea) {
 			switch (inputCatcher.gameAreaCommandType) {
 				case GameAreaCommandType.Block:

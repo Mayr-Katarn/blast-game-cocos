@@ -1,4 +1,4 @@
-import { _decorator, Component, Node, Prefab, instantiate, Vec3, } from 'cc';
+import { _decorator, Component, Node, Prefab, instantiate, Vec3 } from 'cc';
 import { UiEvent, uiEventTarget } from '../../EventEnums/UiEvents';
 import FlyAwayText from '../../Ui/Effects/FlyAwayText';
 import EffectType from '../../Ui/Enums/EffectType';

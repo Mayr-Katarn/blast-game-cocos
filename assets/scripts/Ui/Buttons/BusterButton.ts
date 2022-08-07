@@ -1,4 +1,4 @@
-import { log, _decorator, Component, Enum, Node, Prefab, Label, Vec3 } from 'cc';
+import { log, _decorator, Component, Label } from 'cc';
 import { GameEvent, gameEventTarget } from '../../EventEnums/GameEvents';
 import BusterType from '../../GameObjects/Enums/BusterType';
 
@@ -11,7 +11,7 @@ const { ccclass, property, menu } = _decorator;
 export default class BusterButton extends Component {
     //#region editors fields and properties
     @property({ type: Label })
-    label: Label = null;
+    protected label: Label = null;
     //#endregion
 
     //#region public fields and properties
@@ -41,8 +41,7 @@ export default class BusterButton extends Component {
 
 	//#region event handlers
     public onClick(): void {
-        console.log("CLICK BUSTER");
-        gameEventTarget.emit(GameEvent.TOGGLE_ACTIVE_BUSTER, this._busterType);
+        gameEventTarget.emit(GameEvent.BLOCK_TOGGLE_ACTIVE_BUSTER, this._busterType);
     }
     //#endregion
 }

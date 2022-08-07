@@ -2,12 +2,12 @@ import { log, _decorator, Component, director } from 'cc';
 import { SceneType } from '../../SceneType';
 
 //#region classes-helpers
-const { ccclass, menu } = _decorator;
+const { ccclass, property, menu } = _decorator;
 //#endregion
 
-@ccclass('PauseButton')
-@menu('Ui/Buttons/PauseButton')
-export default class PauseButton extends Component {
+@ccclass('StartGameButton')
+@menu('Ui/Buttons/StartGameButton')
+export default class StartGameButton extends Component {
     //#region editors fields and properties
     //#endregion
 
@@ -24,14 +24,14 @@ export default class PauseButton extends Component {
 	//#endregion
 
 	//#region private methods
-    private _stopGame(): void {
-        director.loadScene(SceneType.MainMenu);
+    private _startGame(): void {
+        director.loadScene(SceneType.Game);
     }
 	//#endregion
 
 	//#region event handlers
     public onClick(): void {
-        this._stopGame();
+        this._startGame();
     }
     //#endregion
 }

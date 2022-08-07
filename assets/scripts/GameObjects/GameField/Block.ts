@@ -7,6 +7,11 @@ import Cell from './Cell';
 //#region classes-helpers
 const { ccclass, property, menu, executeInEditMode } = _decorator;
 
+enum AnimationClip {
+    Destroy = "block-destruction",
+    Pulse = "block-pulse"
+}
+
 @ccclass('BlockColor')
 class BlockColor {
     @property({ type: SpriteFrame })
@@ -14,10 +19,6 @@ class BlockColor {
 
     @property({ type: BlockType })
     public color: number = BlockType.Blue;
-}
-
-enum AnimationClip {
-    Destroy = 'block-destruction',
 }
 //#endregion
 
@@ -49,13 +50,14 @@ export default class Block extends Component {
     public col: number;
     public isDestroyed: boolean = false;
     public isMoving: boolean = false;
-    public _sameColorNearbyBlocks: Block[] = [];
     //#endregion
-
+    
     //#region private fields and properties
     private _collider: BoxCollider2D;
     private _animation: Animation;
     private _maxActiveColors: number = 2;
+    private _initScale: Vec3;
+    private _sameColorNearbyBlocks: Block[] = [];
     private _bottomCell: Cell;
     private _isFirstInit: boolean = true;
     private _activeBuster: number = BusterType.None;
@@ -93,6 +95,7 @@ export default class Block extends Component {
         this._sameColorNearbyBlocks = [];
         this.isDestroyed = false;
         this._bottomCell = null;
+        this._setInitScale();
         this.node.setSiblingIndex(cellsSum - 1);
         this.setNewColor().setLocalPosition(position);
         this._moveTween(targetPosition);
@@ -130,8 +133,8 @@ export default class Block extends Component {
 	//#region private methods
     private _eventListener(isOn: boolean): void {
         const func: string = isOn ? "on" : "off";
-        gameEventTarget[func](GameEvent.RESET_BLOCK_COLOR, this.onResetColor, this);
-        gameEventTarget[func](GameEvent.TOGGLE_ACTIVE_BUSTER, this.onToogleActiveBuster, this);
+        gameEventTarget[func](GameEvent.BLOCK_RESET_COLOR, this.onResetColor, this);
+        gameEventTarget[func](GameEvent.BLOCK_TOGGLE_ACTIVE_BUSTER, this.onToogleActiveBuster, this);
     }
 
     private _initCollider(): void {
@@ -139,6 +142,11 @@ export default class Block extends Component {
         this._collider.on(Contact2DType.BEGIN_CONTACT, this.onBeginContact, this);
         this._collider.on(Contact2DType.END_CONTACT, this.onEndContact, this);
         this._collider.enabled = false;
+    }
+
+    private _setInitScale(): void {
+        const { x, y, z } = this.node.scale;
+        this._initScale = new Vec3(x, y, z);
     }
 
     private _checkBottomCell(): void {
@@ -172,11 +180,9 @@ export default class Block extends Component {
             },
         }
 
-        tween(this.node).to(
-            duration,
-            { position: targetPosition },
-            options
-        ).start();
+        tween(this.node)
+            .to(duration, { position: targetPosition }, options)
+            .start();
     }
     
     private _resetColor(): void {
@@ -206,12 +212,24 @@ export default class Block extends Component {
 
     private _toggleActiveBuster(busterType: number): void {
         this._activeBuster = this._activeBuster === busterType ? BusterType.None : busterType;
+        this._animation.stop();
+        this.node.setScale(this._initScale);
+
+        switch (this._activeBuster) {
+            case BusterType.Bomb:
+                this._animation.play(AnimationClip.Pulse);
+                break;
+
+            default:
+                break;
+        }
     }
 
     private _isActiveBuster(): boolean {
         switch (this._activeBuster) {
             case BusterType.Bomb:
-                gameEventTarget.emit(GameEvent.ACTIVATE_BUSTER, BusterType.Bomb, this);
+                gameEventTarget.emit(GameEvent.BLOCK_TOGGLE_ACTIVE_BUSTER, BusterType.None);
+                gameEventTarget.emit(GameEvent.BUSTER_ACTIVATE, BusterType.Bomb, this);
                 return true;
         
             default:

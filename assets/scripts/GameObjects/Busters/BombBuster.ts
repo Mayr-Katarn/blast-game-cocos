@@ -61,11 +61,9 @@ export default class BombBuster extends Component {
             },
         }
 
-        tween(this.colliderNode).to(
-            this.activationTweenDuration,
-            { scale },
-            options
-        ).start();
+        tween(this.colliderNode)
+            .to(this.activationTweenDuration, { scale }, options)
+            .start();
     }
 	//#endregion
 

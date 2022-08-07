@@ -41,14 +41,14 @@ export default class Busters extends Component {
 	//#region private methods
     private _eventListener(isOn: boolean): void {
         const func: string = isOn ? "on" : "off";
-        gameEventTarget[func](GameEvent.ACTIVATE_BUSTER, this.onActivateBuster, this);
+        gameEventTarget[func](GameEvent.BUSTER_ACTIVATE, this.onActivateBuster, this);
     }
 
     private _activateBuster(busterType: number, block: Block): void {
         switch (busterType) {
             case BusterType.Bomb:
                 this._activateBombBuster(block.node.worldPosition);
-                gameEventTarget.emit(GameEvent.TOGGLE_ACTIVE_BUSTER, BusterType.None, this);
+                gameEventTarget.emit(GameEvent.BLOCK_TOGGLE_ACTIVE_BUSTER, BusterType.None, this);
                 break;
         
             default:

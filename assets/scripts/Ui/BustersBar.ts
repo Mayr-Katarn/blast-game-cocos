@@ -3,7 +3,7 @@ import BusterType from '../GameObjects/Enums/BusterType';
 import BusterButton from './Buttons/BusterButton';
 
 //#region classes-helpers
-const { ccclass, property, menu, executeInEditMode } = _decorator;
+const { ccclass, property, menu } = _decorator;
 
 @ccclass('BusterButtonAtBar')
 class BusterButtonAtBar {
@@ -23,7 +23,6 @@ class BusterButtonAtBar {
 
 @ccclass('BustersBar')
 @menu('Ui/BustersBar')
-// @executeInEditMode(true)
 export default class BustersBar extends Component {
     //#region editors fields and properties
     @property({ type: Node, tooltip: "Родительская нода кнопок" })

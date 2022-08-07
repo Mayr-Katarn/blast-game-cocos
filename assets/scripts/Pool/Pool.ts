@@ -6,7 +6,6 @@ export default class Pool<T extends Component> {
         this.parent = parent;
         this._component = component;
         this._createPool(size);
-        console.log(this._pool);
     }
 
     public prefab: Prefab;

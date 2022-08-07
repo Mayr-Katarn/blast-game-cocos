@@ -1,7 +1,7 @@
 import { _decorator, Component, Vec3 } from 'cc';
 
 //#region classes-helpers
-const { ccclass, property, menu, executeInEditMode } = _decorator;
+const { ccclass, menu, executeInEditMode } = _decorator;
 //#endregion
 
 @ccclass('Cell')

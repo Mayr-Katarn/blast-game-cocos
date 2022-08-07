@@ -1,4 +1,4 @@
-import { log, _decorator, Component, ProgressBar, ITweenOption, tween, Tween } from 'cc';
+import { log, _decorator, Component, ProgressBar, tween, Tween } from 'cc';
 import { UiEvent, uiEventTarget } from '../EventEnums/UiEvents';
 
 //#region classes-helpers

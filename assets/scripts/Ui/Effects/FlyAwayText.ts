@@ -1,5 +1,4 @@
-import { log, _decorator, Component, Enum, Node, effects, Vec3, Label, tween, ITweenOption } from 'cc';
-import EffectType from '../Enums/EffectType';
+import { log, _decorator, Component, Vec3, Label, tween, ITweenOption } from 'cc';
 
 //#region classes-helpers
 const { ccclass, property, menu } = _decorator;
@@ -10,13 +9,13 @@ const { ccclass, property, menu } = _decorator;
 export default class FlyAwayText extends Component {
     //#region editors fields and properties
     @property({ type: Label })
-    textLabel: Label = null;
+    protected textLabel: Label = null;
 
     @property
-    effectTweenDuration: number = 0.5;
+    protected effectTweenDuration: number = 0.5;
 
     @property
-    effectTweenTargetPosition: Vec3 = new Vec3();
+    protected effectTweenTargetPosition: Vec3 = new Vec3();
     //#endregion
 
     //#region public fields and properties
@@ -51,11 +50,9 @@ export default class FlyAwayText extends Component {
             }
         }
 
-        tween(this.node).to(
-            this.effectTweenDuration,
-            { worldPosition },
-            options
-        ).start();
+        tween(this.node)
+            .to(this.effectTweenDuration, { worldPosition }, options)
+            .start();
     }
 	//#endregion
 

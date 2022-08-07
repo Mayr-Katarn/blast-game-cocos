@@ -1,8 +1,9 @@
-import { log, _decorator, Component, Enum, Node, Vec2, Prefab, CCInteger, instantiate, Vec3, View } from 'cc';
+import { log, _decorator, Component, Node, Vec2, Prefab, CCInteger, instantiate, Vec3, Color, director } from 'cc';
 import { gameEventTarget, GameEvent } from '../../EventEnums/GameEvents';
 import { UiEvent, uiEventTarget } from '../../EventEnums/UiEvents';
-import Block from '../../GameObjects/GameField/Block';
 import GameField from '../../GameObjects/GameField/GameField';
+import Block from '../../GameObjects/GameField/Block';
+import { SceneType } from '../../SceneType';
 
 //#region classes-helpers
 const { ccclass, property, menu } = _decorator;
@@ -11,11 +12,23 @@ interface IBlockChain {
     [key: number]: Block[]
 }
 
-const GameOverState = Enum({
-    None: 0,
-    Win: 1,
-    Lose: 2
-})
+enum GameOverState {
+    None = "",
+    Win = "Победа",
+    Lose = "Поражение",
+}
+
+enum GameOverReason {
+    None = "",
+    ScoreTargetReached = "Цель достигнута",
+    RanOutOfTurns = "Закончились ходы",
+    MaxResetFieldTimesReached = "",
+}
+
+const gameOverColor: { [key: string]: Color } = {
+    win: new Color(77, 236, 77, 255),
+    lose: new Color(236, 77, 77, 255),
+}
 //#endregion
 
 @ccclass('GameManager')
@@ -55,7 +68,8 @@ export default class GameManager extends Component {
     private _playerScore: number = 0;
     private _blockChains: IBlockChain = {};
     private _resetFieldTimes: number = 0;
-    private _gameOverState: number = GameOverState.None;
+    private _gameOverState: GameOverState = GameOverState.None;
+    private _gameOverReason: GameOverReason = GameOverReason.None;
     //#endregion
 
 	//#region life-cycle callbacks
@@ -120,7 +134,7 @@ export default class GameManager extends Component {
         console.log(score, percentageCompleted);
 
         if (this._playerScore >= this.playerTargetScore) {
-            this._win();
+            this._gameOver(GameOverState.Win, GameOverReason.ScoreTargetReached);
         }
     }
 
@@ -137,14 +151,14 @@ export default class GameManager extends Component {
         this.playerTurns--;
         uiEventTarget.emit(UiEvent.SET_TURNS, this.playerTurns);
         if (this.playerTurns <= 0) {
-            this._lose();
+            this._gameOver(GameOverState.Lose, GameOverReason.RanOutOfTurns);
         }
     }
 
     private _resetField(): void {
         this._resetFieldTimes++;
         if (this._resetFieldTimes >= this.maxResetFieldTimes) {
-            this._lose();
+            this._gameOver(GameOverState.Lose, GameOverReason.MaxResetFieldTimesReached);
         }
     }
     
@@ -157,17 +171,18 @@ export default class GameManager extends Component {
         this._blockChains[id].push(block)
     }
 
-    private _win(): void {
+    private _gameOver(state: GameOverState, reason: GameOverReason): void {
         if (this._gameOverState === GameOverState.None) {
-            this._gameOverState = GameOverState.Win;
-            log("WIN")
-        }
-    }
+            this._gameOverState = state;
+            this._gameOverReason = reason;
 
-    private _lose(): void {
-        if (this._gameOverState === GameOverState.None) {
-            this._gameOverState = GameOverState.Lose;
-            log("GAME OVER")
+            const color: Color = this._gameOverState === GameOverState.Win ? gameOverColor.win : gameOverColor.lose;
+            const callback: Function = () => {
+                director.loadScene(SceneType.MainMenu);
+            }
+            
+            gameEventTarget.emit(GameEvent.TOGGLE_INPUT_MANAGER, false);
+            uiEventTarget.emit(UiEvent.SET_FULL_SCREEN_MESSAGE, this._gameOverState, this._gameOverReason, color, callback);
         }
     }
 	//#endregion
