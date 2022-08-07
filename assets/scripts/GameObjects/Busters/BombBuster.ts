@@ -48,14 +48,15 @@ export default class BombBuster extends Component {
 
     private _activateBuster(): void {
         this.colliderNode.position = Vec3.ZERO;
-        this.colliderNode.setScale(Vec3.ONE)
+        this.colliderNode.setScale(Vec3.ONE);
         this._collider.enabled = true;
-        const scale = new Vec3(this.radius, this.radius, 1)
+        const scale: Vec3 = new Vec3(this.radius, this.radius, 1);
 
         const options: ITweenOption = {
             onComplete: () => {
                 this._collider.enabled = false;
-                gameEventTarget.emit(GameEvent.ADD_SCORE, this._hitedBlocks.length);
+                const firstBlockWorldPosition: Vec3 = this._hitedBlocks[0].node.worldPosition;
+                gameEventTarget.emit(GameEvent.ADD_SCORE, firstBlockWorldPosition, this._hitedBlocks.length);
                 this.node.destroy();
             },
         }

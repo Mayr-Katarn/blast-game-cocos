@@ -192,17 +192,11 @@ export default class Block extends Component {
 
     private _setNearbyBlock(nearbyBlock: Block): void {
         if (nearbyBlock.blockType !== this.blockType) return;
-
         this._sameColorNearbyBlocks.push(nearbyBlock);
-
-        // if (this.row === 1 && this.col === 1) {
-            // log('add', this.sameColorNearbyBlocks)
-        // }
     }
 
     private _updateNearbyBlocks(): void {
         this._sameColorNearbyBlocks = this._sameColorNearbyBlocks.filter(block => !block.isDestroyed && !block.isMoving);
-        // log('upd', this.sameColorNearbyBlocks)
     }
 
     private _checkSameColorNearbyBlocks(): void {

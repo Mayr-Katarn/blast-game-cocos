@@ -665,6 +665,7 @@
     "__prefab": {
       "__id__": 31
     },
+    "progressLineTweenDuration": 0.5,
     "_id": ""
   },
   {

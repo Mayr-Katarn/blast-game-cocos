@@ -8,4 +8,7 @@ export enum UiEvent {
     SET_PROGRESS,
     SET_TURNS,
     SET_PLAYER_SCORE,
+
+    // Effects
+    FLY_AWAY_TEXT,
 }

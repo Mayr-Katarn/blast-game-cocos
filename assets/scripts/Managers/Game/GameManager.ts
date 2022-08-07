@@ -99,27 +99,38 @@ export default class GameManager extends Component {
     private _checkChains(): void {
         const chains: string[] = Object.keys(this._blockChains);
         chains.forEach(chain => {
-            if (this._blockChains[chain].length !== 0 && this._blockChains[chain].every((block: Block) => !block.node.active)){
-                this._calcPlayerPoints(this._blockChains[chain].length)
-                this._blockChains[chain] = [];
+            if (this._blockChains[chain].length !== 0 && this._blockChains[chain].every((block: Block) => !block.node.active)) {
+                const score: number = this._calcScore(this._blockChains[chain].length);
+                const firstBlockWorldPosition = this._blockChains[chain][0].node.worldPosition;
+
+                this._sendFlyAwayText(firstBlockWorldPosition, score);
+                this._updatePlayerScore(score);
                 this._madeTurn();
-                // console.log(this._blockChains);
+                this._blockChains[chain] = [];
             }
         })
     }
 
-    private _calcPlayerPoints(blockSum: number): void {
-        const score: number = blockSum * this.playerScoreForBlock;
+    private _updatePlayerScore(score: number): void {
         this._playerScore += score;
         const percentageCompleted: number = this._playerScore / this.playerTargetScore * 100;
-        console.log(score, percentageCompleted);
         uiEventTarget.emit(UiEvent.SET_PROGRESS, percentageCompleted);
         uiEventTarget.emit(UiEvent.SET_PLAYER_SCORE, this._playerScore);
-        uiEventTarget.emit(UiEvent.SET_TURNS, this.playerTurns);
+
+        console.log(score, percentageCompleted);
 
         if (this._playerScore >= this.playerTargetScore) {
             this._win();
         }
+    }
+
+    private _calcScore(blockSum: number): number {
+        return blockSum * this.playerScoreForBlock;
+    }
+
+    private _sendFlyAwayText(worldPosition: Vec3, score: number): void {
+        const text: string = `+${score}`;
+        uiEventTarget.emit(UiEvent.FLY_AWAY_TEXT, worldPosition, text);
     }
 
     private _madeTurn(): void {
@@ -144,7 +155,6 @@ export default class GameManager extends Component {
         }
 
         this._blockChains[id].push(block)
-        // log(this._blockChains)
     }
 
     private _win(): void {
@@ -171,8 +181,10 @@ export default class GameManager extends Component {
         this._setBlockInChain(block, firstBlock);
     }
 
-    public onAddScore(blockSum: number): void {
-        this._calcPlayerPoints(blockSum);
+    public onAddScore(firstBlockWorldPosition: Vec3, blockSum: number): void {
+        const score: number = this._calcScore(blockSum);
+        this._sendFlyAwayText(firstBlockWorldPosition, score);
+        this._updatePlayerScore(score);
     }
 
     public onMadeTurn(): void {

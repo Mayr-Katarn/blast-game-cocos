@@ -3,7 +3,7 @@ import { gameEventTarget, GameEvent } from '../../EventEnums/GameEvents';
 import GameAreaInputCommand from './Commands/GameAreaInputCommand';
 import IInputCommand from './Commands/IInputCommand';
 import UiAreaInputCommand from './Commands/UiAreaInputCommand';
-import { InputDirection } from './Enums/InputDirection';
+import InputDirection from './Enums/InputDirection';
 import { InputType } from './Enums/InputType';
 import InputCatcher from './InputCatcher';
 
@@ -40,26 +40,26 @@ export default class InputManager extends Component {
 	//#endregion
 
 	//#region event handlers
-	public onInput(type: number, area: number, touch: Touch, place: InputCatcher, target: Node): void {
+	public onInput(type: number, area: number, touch: Touch, place: InputCatcher): void {
 		const command = this._commands[area];
 		
 		switch (type) {
 			case InputType.Down:
-				command?.onDown(touch, place, target);
+				command?.onDown(touch, place);
 				break;
 
 			case InputType.Move:
-				command?.onMove(touch, place, target);
+				command?.onMove(touch, place);
 				break;
 
 			case InputType.Up:
-				command?.onUp(touch, place, target);
+				command?.onUp(touch, place);
 				break;
 		}
 	}
 
-	public onDown(area: number, touch: Touch, place: InputCatcher, target: Node): void {}
-	public onMove(area: number, touch: Touch, place: InputCatcher, target: Node): void {}
-	public onUp(area: number, touch: Touch, place: InputCatcher, target: Node): void {}
+	public onDown(area: number, touch: Touch, place: InputCatcher): void {}
+	public onMove(area: number, touch: Touch, place: InputCatcher): void {}
+	public onUp(area: number, touch: Touch, place: InputCatcher): void {}
 	//#endregion
 }

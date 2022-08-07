@@ -13,7 +13,7 @@ export default class IInputCommand {
 		this.manager = manager;
 	}
 
-	public onDown(touch: Touch, place: InputCatcher, target: Node) {}
-	public onMove(touch: Touch, place: InputCatcher, target: Node) {}
-	public onUp(touch: Touch, place: InputCatcher, target: Node) {}
+	public onDown(touch: Touch, place: InputCatcher) {}
+	public onMove(touch: Touch, place: InputCatcher) {}
+	public onUp(touch: Touch, place: InputCatcher) {}
 }

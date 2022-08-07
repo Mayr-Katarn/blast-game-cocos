@@ -1,9 +1,9 @@
-import { log, _decorator, Component, Enum, Node, ProgressBar, Label } from 'cc';
-import { gameEventTarget, GameEvent } from '../EventEnums/GameEvents';
+import { log, _decorator, Component, Label } from 'cc';
 import { UiEvent, uiEventTarget } from '../EventEnums/UiEvents';
 
 //#region classes-helpers
 const { ccclass, property, menu } = _decorator;
+const SCORE_ANIMATION_STEPS: number = 4;
 //#endregion
 
 @ccclass('ScoreAndTurnsBar')
@@ -48,7 +48,17 @@ export default class ScoreAndTurnsBar extends Component {
     }
 
     private _setPlayerScoreLabel(playerScore: number): void {
-        this.playerScoreLabel.string = `${playerScore}`
+        this.unscheduleAllCallbacks();
+        let iteration: number = 0;
+        let lastScore: number = +this.playerScoreLabel.string;
+        const scoreByStep: number = Math.round((playerScore - lastScore) / SCORE_ANIMATION_STEPS);
+
+        this.schedule(() => {
+            iteration++;
+            lastScore += scoreByStep;
+            const score: number = iteration === SCORE_ANIMATION_STEPS ? playerScore : lastScore;
+            this.playerScoreLabel.string = `${score}`;
+        }, 0.1, SCORE_ANIMATION_STEPS - 1);
     }
 	//#endregion
 
@@ -62,3 +72,4 @@ export default class ScoreAndTurnsBar extends Component {
     }
     //#endregion
 }
+
