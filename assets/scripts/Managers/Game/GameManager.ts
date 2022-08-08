@@ -131,8 +131,6 @@ export default class GameManager extends Component {
         uiEventTarget.emit(UiEvent.SET_PROGRESS, percentageCompleted);
         uiEventTarget.emit(UiEvent.SET_PLAYER_SCORE, this._playerScore);
 
-        console.log(score, percentageCompleted);
-
         if (this._playerScore >= this.playerTargetScore) {
             this._gameOver(GameOverState.Win, GameOverReason.ScoreTargetReached);
         }

@@ -38,7 +38,7 @@ export default class Block extends Component {
     protected initMoveTweenDuration: number = 0.5;
     
     @property
-    protected toBotCellMoveTweenDuration: number = 0.1;
+    protected moveToBotCellTweenDuration: number = 0.1;
 
     @property({ type: [BlockColor] })
     protected blockColors: BlockColor[] = [];
@@ -171,7 +171,7 @@ export default class Block extends Component {
         this._collider.enabled = false;
         this.crossColliderNode.position = Vec3.ZERO;
 
-        const duration: number = this._isFirstInit ? this.initMoveTweenDuration : this.toBotCellMoveTweenDuration;
+        const duration: number = this._isFirstInit ? this.initMoveTweenDuration : this.moveToBotCellTweenDuration;
         const options: ITweenOption = {
             onComplete: () => {
                 this.isMoving = false;
@@ -240,7 +240,6 @@ export default class Block extends Component {
 
 	//#region event handlers
     public onClick(): void {
-        console.log("CLICK", this);
         if (this._isActiveBuster()) return;
         if (this._sameColorNearbyBlocks.length !== 0) this.destroyBlock();
     }

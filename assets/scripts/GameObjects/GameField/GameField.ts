@@ -129,7 +129,6 @@ export default class GameField extends Component {
 
     private _createBlockPool(): void {
         this._blockPool = new Pool<Block>(this.blockPrefab, new Block, 4, this.maskNode);
-        log(this._blockPool)
     }
 
     private _initBlocks(): void {
